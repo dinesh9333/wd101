@@ -1,114 +1,119 @@
-document.addEventListener("DOMContentLoaded", function () {
-  const registrationForm = document.getElementById("registrationForm");
-  const userTableBody = document.getElementById("userTableBody");
-  const clearTableBtn = document.getElementById("clearTableBtn");
+let userdata = document.getElementById("user-data");
 
-  // Load existing entries from local storage
-  loadEntriesFromLocalStorage();
+const getdata = () => {
+  let displaydataget = localStorage.getItem("user_entries");
 
-  registrationForm.addEventListener("submit", function (event) {
-    event.preventDefault();
-
-    const nameInput = document.getElementById("name");
-    const emailInput = document.getElementById("email");
-    const passwordInput = document.getElementById("password");
-    const dobInput = document.getElementById("dob");
-    const termsCheckbox = document.getElementById("terms");
-
-    const name = nameInput.value;
-    const email = emailInput.value;
-    const password = passwordInput.value;
-    const dob = dobInput.value;
-    const termsAccepted = termsCheckbox.checked;
-
-    // Check email format
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-      alert("Invalid email format");
-      return;
-    }
-
-    // Check age range (between 18 and 55)
-    const birthDate = new Date(dob);
-    const age = calculateAge(birthDate);
-    if (age < 18 || age > 55) {
-      alert("Age must be between 18 and 55");
-      return;
-    }
-
-    // Verify password with at least one uppercase, one lowercase, and one special character
-    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]/;
-    if (!passwordRegex.test(password)) {
-      alert("Password must contain at least one uppercase letter, one lowercase letter, and one special character");
-      return;
-    }
-
-    // Add the user details to the table and local storage
-    addUserToTable(name, email, password, dob, termsAccepted);
-    saveEntryToLocalStorage(name, email, password, dob, termsAccepted);
-
-    // Clear the form
-    registrationForm.reset();
-  });
-
-  clearTableBtn.addEventListener("click", function () {
-    // Clear the table and local storage
-    userTableBody.innerHTML = "";
-    clearLocalStorage();
-  });
-
-  function addUserToTable(name, email, password, dob, termsAccepted) {
-    const newRow = document.createElement("tr");
-    newRow.innerHTML = `
-      <td>${name}</td>
-      <td>${email}</td>
-      <td>${password}</td>
-      <td>${dob}</td>
-      <td>${termsAccepted ? 'Yes' : 'No'}</td>
-    `;
-    userTableBody.appendChild(newRow);
+  if (displaydataget) {
+    displaydataget = JSON.parse(displaydataget);
+  } else {
+    displaydataget = [];
   }
 
-  function saveEntryToLocalStorage(name, email, password, dob, termsAccepted) {
-    const entry = {
-      name: name,
-      email: email,
-      password: password,
-      dob: dob,
-      termsAccepted: termsAccepted
-    };
+  return displaydataget;
+};
 
-    let entries = getEntriesFromLocalStorage();
-    entries.push(entry);
-    localStorage.setItem("userEntries", JSON.stringify(entries));
+let user_entries = getdata();
+
+const displaydata = () => {
+  const displaydataget = getdata();
+
+  const tabledata = displaydataget
+    .map((entrydata) => {
+      const namefield = `<td >${entrydata.name}</td>`;
+      const emailfield = `<td >${entrydata.email}</td>`;
+      const passwordfield = `<td >${entrydata.password}</td>`;
+      const dobfield = `<td >${entrydata.dob}</td>`;
+      const tcfield = `<td >${entrydata.tc}</td>`;
+
+      const rowfield = `<tr> ${namefield} ${emailfield} ${passwordfield} ${dobfield} ${tcfield} </tr>`;
+
+      return rowfield;
+    })
+    .join("\n");
+
+  const table = `<table  class = "table-auto w-full" ><tr>
+  
+  <th >Name</th>
+  <th >Email</th>
+  <th >Password</th>
+  <th >Dob</th>
+  <th >Accepted terms?</th>
+
+  </tr> ${tabledata} 
+  </table>`;
+
+  let details = document.getElementById("output");
+  details.innerHTML = table;
+};
+
+const saveuserdata = (event) => {
+  event.preventDefault();
+
+  const name = document.getElementById("name").value;
+
+  const email = document.getElementById("email").value;
+
+  const password = document.getElementById("password").value;
+
+  const dob = document.getElementById("dob").value;
+
+  const tc = document.getElementById("tc").checked;
+
+  const entry = {
+    name,
+    email,
+    password,
+    dob,
+    tc,
+  };
+
+  user_entries.push(entry);
+
+  localStorage.setItem("user_entries", JSON.stringify(user_entries));
+
+  displaydata();
+};
+
+userdata.addEventListener("submit", saveuserdata);
+displaydata();
+
+const email = document.getElementById("email");
+
+email.addEventListener("input", () => valid(email));
+
+const sub = document.getElementById("sbutton");
+
+sub.addEventListener("click", () => valid(email));
+
+function valid(element) {
+  const checkemail = /^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/;
+
+  if (email.value == "" || !checkemail.test(email.value)) {
+    element.setCustomValidity("The Email is not correct ");
+    element.reportValidity();
+  } else {
+    element.setCustomValidity("");
   }
+}
 
-  function loadEntriesFromLocalStorage() {
-    let entries = getEntriesFromLocalStorage();
+const dob = document.getElementById("dob");
 
-    for (const entry of entries) {
-      addUserToTable(entry.name, entry.email, entry.password, entry.dob, entry.termsAccepted);
-    }
+dob.addEventListener("input", () => validatedob(dob));
+
+sub.addEventListener("click", () => validatedob(dob));
+
+function validatedob(element) {
+  const newtoday = new Date();
+  const dobDatenew = new Date(dob.value);
+  const ageinms = newtoday - dobDatenew;
+  const agey = ageinms / 1000 / 60 / 60 / 24 / 365.25;
+
+  if (agey < 18 || agey > 55) {
+    element.setCustomValidity(
+      "Age should be Greater than 18 and less than 55 "
+    );
+    element.reportValidity();
+  } else {
+    element.setCustomValidity("");
   }
-
-  function getEntriesFromLocalStorage() {
-    const storedEntries = localStorage.getItem("userEntries");
-    return storedEntries ? JSON.parse(storedEntries) : [];
-  }
-
-  function clearLocalStorage() {
-    localStorage.removeItem("userEntries");
-  }
-
-  function calculateAge(birthDate) {
-    const currentDate = new Date();
-    const age = currentDate.getFullYear() - birthDate.getFullYear();
-    const monthDiff = currentDate.getMonth() - birthDate.getMonth();
-
-    if (monthDiff < 0 || (monthDiff === 0 && currentDate.getDate() < birthDate.getDate())) {
-      return age - 1;
-    } else {
-      return age;
-    }
-  }
-});
+}
