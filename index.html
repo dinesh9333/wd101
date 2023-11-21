@@ -1,106 +1,56 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Registration Form</title>
-    <style>
-        body {
-            font-family: 'Arial', sans-serif;
-            background-color: #f4f4f4;
-            text-align: center;
-            margin: 0;
-            padding: 0;
-        }
-
-        form {
-            background-color: #fff;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            width: 300px;
-            margin: 20px auto;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 8px;
-            color: #333;
-        }
-
-        input {
-            width: 100%;
-            padding: 8px;
-            margin-bottom: 12px;
-            box-sizing: border-box;
-        }
-
-        button {
-            background-color: #4caf50;
-            color: #fff;
-            padding: 10px 15px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-
-        table {
-            width: 80%;
-            margin: 20px auto;
-            border-collapse: collapse;
-        }
-
-        th, td {
-            padding: 12px;
-            text-align: left;
-            border-bottom: 1px solid #ddd;
-        }
-
-        th {
-            background-color: #4caf50;
-            color: white;
-        }
-
-        tbody tr:hover {
-            background-color: #f5f5f5;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Form Registration</title>
 </head>
+
+<link rel="stylesheet" href="style.css" />
+
 <body>
+  <div class="full">
+    <div class="indatamain">
+      <h2>Registration Form</h2>
+      <form id="user-data">
+        <div id="inname" class="indataelem">
+          <label for="name">Name</label>
+          <input placeholder="Enter Full Name" required type="text" name="name" id="name" />
+        </div>
 
-    <form id="registrationForm">
-        <label for="name">Name:</label>
-        <input type="text" id="name" name="name" required>
+        <div id="inemail" class="indataelem">
+          <label for="email">Email</label>
+          <input required placeholder="Enter Email" type="email" name="email" id="email" />
+        </div>
 
-        <label for="email">Email:</label>
-        <input type="email" id="email" name="email" required>
+        <div id="inpassword" class="indataelem">
+          <label for="password">Password</label>
+          <input required placeholder="Enter Password" type="password" name="password" id="password" />
+        </div>
 
-        <label for="password">Password:</label>
-        <input type="password" id="password" name="password" required>
+        <div id="indob" class="indataelem">
+          <label for="dob">DOB</label>
+          <input required type="date" name="dob" id="dob" />
+        </div>
 
-        <label for="dob">Date of Birth:</label>
-        <input type="date" id="dob" name="dob" required>
+        <div id="intc">
+          <label for="tc">Accept Terms & Conditions</label>
+          <input type="checkbox" name="tc" id="tc" />
+        </div>
 
-        <label for="terms">Accept Terms?</label>
-        <input type="checkbox" id="terms" name="terms" required>
+        <button id="sbutton" type="submit">Submit</button>
+      </form>
+    </div>
 
-        <button type="submit">Submit</button>
-    </form>
+    <div class="downblock">
+      <h2>Entries</h2>
+      <div id="output" class="output"></div>
+    </div>
+  </div>
 
-    <table id="dataTable">
-        <thead>
-            <tr>
-                <th>Name</th>
-                <th>Email</th>
-                <th>Password</th>
-                <th>Dob</th>
-                <th>Accepted terms?</th>
-            </tr>
-        </thead>
-        <tbody>
-            <!-- Table content will go here -->
-        </tbody>
-    </table>
-
+  <script src="index.js"></script>
 </body>
+
 </html>
